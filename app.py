@@ -154,6 +154,33 @@ tab_trends, tab_reels, tab_campaign, tab_saved, tab_settings = st.tabs(
     ["🔥 Trend Radar", "🎬 Reel Ideas", "📣 Campaign Planner", "⭐ Saved", "⚙️ Settings / API Key"]
 )
 
+# Tab hover tooltips
+st.markdown(
+    """
+    <script>
+    const tabTooltips = [
+      "🔥 Trend Radar — Live viral formats, memes & sounds",
+      "🎬 Reel Ideas — Ready-to-film comedic scripts & shot lists",
+      "📣 Campaign Planner — Event marketing campaigns & campus stunts",
+      "⭐ Saved — Your saved trends, scripts & exported ideas",
+      "⚙️ Settings — Optional Gemini API key override"
+    ];
+    function attachTooltips() {
+      const tabs = window.parent.document.querySelectorAll('button[data-baseweb="tab"]');
+      tabs.forEach((tab, i) => {
+        if (tabTooltips[i]) {
+          tab.setAttribute('title', tabTooltips[i]);
+        }
+      });
+    }
+    attachTooltips();
+    setTimeout(attachTooltips, 500);
+    setTimeout(attachTooltips, 1500);
+    </script>
+    """,
+    unsafe_allow_html=True,
+)
+
 # ---------------------------- Trend Radar ---------------------------------- #
 with tab_trends:
     st.subheader("What's making people laugh right now?")

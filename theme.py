@@ -216,6 +216,33 @@ def get_css(theme_name: str) -> str:
         border: none !important;
         font-weight: 600 !important;
         letter-spacing: 0.2px !important;
+        box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3) !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+      }}
+      button[kind="primary"]:hover {{
+        transform: translateY(-1px) !important;
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45) !important;
+      }}
+
+      /* Modern Interactive Tabs with Hover Name Glow */
+      button[data-baseweb="tab"] {{
+        position: relative;
+        padding: 8px 18px !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        color: #94A3B8 !important;
+        transition: all 0.2s ease-in-out !important;
+        border-radius: 8px 8px 0 0 !important;
+      }}
+      button[data-baseweb="tab"]:hover {{
+        color: #FFFFFF !important;
+        background: rgba(139, 92, 246, 0.12) !important;
+        text-shadow: 0 0 10px rgba(139, 92, 246, 0.8), 0 0 20px rgba(236, 72, 153, 0.5) !important;
+      }}
+      button[data-baseweb="tab"][aria-selected="true"] {{
+        color: #F8FAFC !important;
+        border-bottom-color: #8B5CF6 !important;
+        text-shadow: 0 0 8px rgba(139, 92, 246, 0.6) !important;
       }}
     </style>
     """
