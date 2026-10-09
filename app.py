@@ -107,12 +107,20 @@ STATUS_ICON = {"Rising": "📈", "Peak": "🔥", "Fading": "📉"}
 
 
 def get_client():
-    # Read from environment (.env) or Streamlit Cloud Secrets (st.secrets)
+    # User custom key entered in Settings tab takes highest priority
+    custom_key = st.session_state.get("custom_api_key", "").strip()
+    if custom_key:
+        return make_client(custom_key)
+
+    # Otherwise read from environment (.env) or Streamlit Cloud Secrets (st.secrets)
     api_key = os.getenv("GEMINI_API_KEY", "")
     if not api_key and hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
         api_key = st.secrets["GEMINI_API_KEY"]
     if not api_key:
-        st.error("Gemini API key not found! Please set GEMINI_API_KEY in your .env file or Streamlit Cloud Secrets.")
+        st.error(
+            "Gemini API key not found! Please open the **⚙️ Settings / API Key** tab to enter your key, "
+            "or set GEMINI_API_KEY in Streamlit Cloud Secrets / .env file."
+        )
         st.stop()
     return make_client(api_key)
 
@@ -140,10 +148,10 @@ def save_button(kind: str, data: dict, key: str) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# Tabs (Clean 4 Core Tabs)
+# Tabs
 # --------------------------------------------------------------------------- #
-tab_trends, tab_reels, tab_campaign, tab_saved = st.tabs(
-    ["🔥 Trend Radar", "🎬 Reel Ideas", "📣 Campaign Planner", "⭐ Saved"]
+tab_trends, tab_reels, tab_campaign, tab_saved, tab_settings = st.tabs(
+    ["🔥 Trend Radar", "🎬 Reel Ideas", "📣 Campaign Planner", "⭐ Saved", "⚙️ Settings / API Key"]
 )
 
 # ---------------------------- Trend Radar ---------------------------------- #
@@ -412,3 +420,39 @@ with tab_saved:
                 if st.button("🗑️ Delete", key=f"del_{item['id']}"):
                     storage.delete_item(item["id"])
                     st.rerun()
+
+# ---------------------------- Settings / API Key --------------------------- #
+with tab_settings:
+    st.subheader("⚙️ Settings & API Configuration")
+    st.caption("Optionally use your own Google Gemini API key if you want to override the default system key.")
+
+    current_custom_key = st.session_state.get("custom_api_key", "")
+    key_input = st.text_input(
+        "Enter your personal Gemini API Key",
+        value=current_custom_key,
+        type="password",
+        placeholder="AIzaSy...",
+        help="You can get a free API key at https://aistudio.google.com/apikey",
+    )
+
+    c1, c2, _ = st.columns([1.5, 1.5, 3])
+    if c1.button("💾 Save Key", type="primary"):
+        st.session_state["custom_api_key"] = key_input.strip()
+        st.success("Your API key has been saved for this session!")
+        st.rerun()
+
+    if c2.button("✖ Clear Key"):
+        st.session_state.pop("custom_api_key", None)
+        st.info("Custom key cleared! App will use default server key.")
+        st.rerun()
+
+    st.markdown("---")
+    st.markdown(
+        """
+        ### ℹ️ How API Keys Work:
+        - **By default:** The app runs on the free system key configured in Streamlit Cloud Secrets.
+        - **Personal Key Override:** If you enter your own key here, TrendScout will use your key for all requests in this session.
+        - **Get a Free Key:** Visit [Google AI Studio](https://aistudio.google.com/apikey), click **Create API Key**, and paste it above.
+        """
+    )
+
