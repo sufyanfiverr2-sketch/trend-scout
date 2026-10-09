@@ -56,20 +56,6 @@ with st.sidebar:
 
     st.divider()
 
-    api_key = os.getenv("GEMINI_API_KEY", "")
-    if not api_key:
-        api_key = st.text_input(
-            "Gemini API key",
-            type="password",
-            help="Get a free key at https://aistudio.google.com/apikey",
-        )
-
-    enable_grounding = st.checkbox(
-        "Use Google Search grounding",
-        value=False,
-        help="Keep UNCHECKED for Free Tier. (Search grounding is a paid Google feature).",
-    )
-
     st.subheader("Society Profile")
     profile = SocietyProfile(
         name=st.text_input("Society name", "Youth & Events Society"),
@@ -131,8 +117,12 @@ STATUS_ICON = {"Rising": "📈", "Peak": "🔥", "Fading": "📉"}
 
 
 def get_client():
+    # Read from environment (.env) or Streamlit Cloud Secrets (st.secrets)
+    api_key = os.getenv("GEMINI_API_KEY", "")
+    if not api_key and hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
+        api_key = st.secrets["GEMINI_API_KEY"]
     if not api_key:
-        st.error("Add your Gemini API key in the sidebar (or in a `.env` file) first.")
+        st.error("Gemini API key not found! Please set GEMINI_API_KEY in your .env file or Streamlit Cloud Secrets.")
         st.stop()
     return make_client(api_key)
 
