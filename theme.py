@@ -164,23 +164,18 @@ def get_css() -> str:
         border-color: #404040 !important;
       }
 
-      /* Interactive Tabs (Monolith Minimalist) */
-      button[data-baseweb="tab"] {
-        position: relative;
-        padding: 8px 18px !important;
+      /* Multiselect Tag Pill Styling (Black text on white pill) */
+      div[data-baseweb="tag"], span[data-baseweb="tag"] {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border-radius: 6px !important;
+      }
+      div[data-baseweb="tag"] *, span[data-baseweb="tag"] * {
+        color: #000000 !important;
         font-weight: 600 !important;
-        font-size: 0.95rem !important;
-        color: #71717A !important;
-        transition: all 0.2s ease !important;
-        border-radius: 6px 6px 0 0 !important;
       }
-      button[data-baseweb="tab"]:hover {
-        color: #FFFFFF !important;
-        background: rgba(255, 255, 255, 0.06) !important;
-      }
-      button[data-baseweb="tab"][aria-selected="true"] {
-        color: #FFFFFF !important;
-        border-bottom-color: #FFFFFF !important;
+      div[data-baseweb="tag"] svg, span[data-baseweb="tag"] svg {
+        fill: #000000 !important;
       }
     </style>
     """
