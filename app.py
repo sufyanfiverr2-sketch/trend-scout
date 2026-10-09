@@ -40,20 +40,10 @@ st.markdown(get_css(THEME_NAME), unsafe_allow_html=True)
 # Sidebar: Branding & Profile
 # --------------------------------------------------------------------------- #
 with st.sidebar:
-    # Brand Title with Cyber Reel Vector Logo
     st.markdown(
-        f"""
-        <div class="brand-header">
-          {logo_svg}
-          <div>
-            <h2 class="brand-title">TrendScout</h2>
-            <div class="brand-sub">University Society Reels Studio</div>
-          </div>
-        </div>
-        """,
+        f'<div class="brand-header">{logo_svg}<div><h2 class="brand-title">TrendScout</h2><div class="brand-sub">University Society Reels Studio</div></div></div>',
         unsafe_allow_html=True,
     )
-
     st.divider()
 
     st.subheader("Society Profile")
