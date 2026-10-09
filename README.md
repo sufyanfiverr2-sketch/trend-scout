@@ -10,6 +10,8 @@ TrendScout Studio is an open-source, AI-driven social media trends intelligence 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Theme](https://img.shields.io/badge/Theme-Monolith%20Pitch%20Black-000000.svg)](#design-identity)
 
+> 📹 **Walkthrough Demo Video (38s):** [Watch `demo_walkthrough.mp4`](demo_walkthrough.mp4) to see the Sign Up, Login, Trend Radar, Reel Generator, and Multi-Device SQLite sync in action!
+
 ---
 
 ## ⚡ Features & Capabilities
