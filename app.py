@@ -13,7 +13,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 import storage
-from theme import LOGOS, THEMES, get_css
+from theme import LOGOS, THEME_CFG, get_css
 from trends import (
     TREND_FOCUS,
     Result,
@@ -28,13 +28,11 @@ load_dotenv()
 
 st.set_page_config(page_title="TrendScout Studio", page_icon="🎬", layout="wide")
 
-# Locked Theme: Cyber Reel (Neon Glow)
-THEME_NAME = "Cyber Reel (Neon Glow)"
-theme_cfg = THEMES[THEME_NAME]
-logo_svg = LOGOS[theme_cfg["logo"]]
+# Locked Theme: Monolith (Pure Pitch Black)
+logo_svg = LOGOS["monolith"]
 
-# Inject Cyber Reel CSS directly
-st.markdown(get_css(THEME_NAME), unsafe_allow_html=True)
+# Inject Monolith CSS directly
+st.markdown(get_css(), unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
 # Sidebar: Branding & Profile
