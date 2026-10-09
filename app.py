@@ -26,7 +26,12 @@ from trends import (
 
 load_dotenv()
 
-st.set_page_config(page_title="TrendScout Studio", page_icon="🎬", layout="wide")
+st.set_page_config(
+    page_title="TrendScout Studio",
+    page_icon="🎬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # Locked Theme: Monolith (Pure Pitch Black)
 logo_svg = LOGOS["monolith"]

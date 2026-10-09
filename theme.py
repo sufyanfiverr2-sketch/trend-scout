@@ -164,21 +164,78 @@ def get_css() -> str:
         border-color: #404040 !important;
       }
 
-      /* Multiselect Tag Pill Styling (Dark Obsidian Pill with Crisp White Text) */
-      span[data-baseweb="tag"], div[data-baseweb="tag"] {
-        background-color: #1A1A1A !important;
-        background: #1A1A1A !important;
-        border: 1px solid #333333 !important;
+      /* Multiselect Tag Pill Styling (White Pill with High-Contrast Pitch Black Text) */
+      .stMultiSelect [data-tag],
+      [data-testid="stMultiSelect"] [data-tag],
+      [data-testid="stMultiSelectTagsContainer"] [data-tag],
+      span[data-tag],
+      div[data-tag],
+      span.e1kig3hy3,
+      .e1kig3hy3,
+      span[data-baseweb="tag"],
+      div[data-baseweb="tag"] {
+        background-color: #FFFFFF !important;
+        background: #FFFFFF !important;
+        border: 1px solid #FFFFFF !important;
         border-radius: 6px !important;
-        color: #FFFFFF !important;
+        color: #000000 !important;
       }
-      span[data-baseweb="tag"] span, div[data-baseweb="tag"] span,
-      span[data-baseweb="tag"] div, div[data-baseweb="tag"] div {
-        color: #FFFFFF !important;
-        font-weight: 600 !important;
+      .stMultiSelect [data-tag] *,
+      [data-testid="stMultiSelect"] [data-tag] *,
+      [data-testid="stMultiSelectTagsContainer"] [data-tag] *,
+      span[data-tag] *,
+      div[data-tag] *,
+      .e1kig3hy3 *,
+      .e1kig3hy4,
+      span[data-baseweb="tag"] *,
+      div[data-baseweb="tag"] * {
+        color: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
+        font-weight: 700 !important;
       }
-      span[data-baseweb="tag"] svg, div[data-baseweb="tag"] svg {
-        fill: #A1A1AA !important;
+      .stMultiSelect [data-tag] button,
+      [data-testid="stMultiSelect"] [data-tag] button,
+      span[data-tag] button,
+      div[data-tag] button {
+        color: #000000 !important;
+        opacity: 0.8 !important;
+      }
+      .stMultiSelect [data-tag] button:hover,
+      [data-testid="stMultiSelect"] [data-tag] button:hover,
+      span[data-tag] button:hover,
+      div[data-tag] button:hover {
+        opacity: 1 !important;
+      }
+      .stMultiSelect [data-tag] svg,
+      [data-testid="stMultiSelect"] [data-tag] svg,
+      span[data-tag] svg,
+      div[data-tag] svg,
+      span[data-baseweb="tag"] svg,
+      div[data-baseweb="tag"] svg {
+        color: #000000 !important;
+        fill: #000000 !important;
+        stroke: #000000 !important;
+      }
+      .stMultiSelect [data-tag] svg path,
+      [data-testid="stMultiSelect"] [data-tag] svg path,
+      span[data-tag] svg path,
+      div[data-tag] svg path {
+        stroke: #000000 !important;
+      }
+
+      /* Multiselect Dropdown Menu (Clean Dark Obsidian) */
+      div[data-testid="stMultiSelectDropdown"] {
+        background-color: #0D0D0D !important;
+        border: 1px solid #262626 !important;
+        border-radius: 8px !important;
+      }
+      div[data-testid="stMultiSelectDropdown"] [role="option"] {
+        color: #F4F4F5 !important;
+      }
+      div[data-testid="stMultiSelectDropdown"] [role="option"]:hover,
+      div[data-testid="stMultiSelectDropdown"] [data-hovered] {
+        background-color: #1A1A1A !important;
+        color: #FFFFFF !important;
       }
     </style>
     """
