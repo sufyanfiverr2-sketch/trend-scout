@@ -12,6 +12,7 @@ from urllib.parse import quote_plus
 import streamlit as st
 from dotenv import load_dotenv
 
+import auth
 import storage
 from theme import LOGOS, THEME_CFG, get_css
 from trends import (
@@ -40,6 +41,74 @@ logo_svg = LOGOS["monolith"]
 st.markdown(get_css(), unsafe_allow_html=True)
 
 # --------------------------------------------------------------------------- #
+# Multi-User Authentication Gate
+# --------------------------------------------------------------------------- #
+user = st.session_state.get("user")
+guest_mode = st.session_state.get("guest_mode", False)
+
+if not user and not guest_mode:
+    st.markdown(
+        f"""
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 3.5rem auto 1.5rem auto; text-align: center; max-width: 580px;">
+          <div style="margin-bottom: 12px;">{logo_svg}</div>
+          <h1 style="margin: 0; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.5px;">TrendScout Studio</h1>
+          <p style="margin: 8px 0 0 0; color: #A1A1AA; font-size: 0.95rem; line-height: 1.5;">
+            Discover viral Instagram trends, generate hilarious campus reel scripts, and sync your saved ideas securely across devices.
+          </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    _, auth_col, _ = st.columns([1, 1.4, 1])
+    with auth_col:
+        with st.container(border=True):
+            tab_login, tab_signup = st.tabs(["🔑 Sign In", "✨ Create Account"])
+
+            with tab_login:
+                st.markdown(
+                    "<p style='color: #A1A1AA; font-size: 0.85rem; margin-bottom: 12px;'>Log in to access your saved trends and scripts from any device.</p>",
+                    unsafe_allow_html=True,
+                )
+                login_user = st.text_input("Username", key="auth_login_user")
+                login_pass = st.text_input("Password", type="password", key="auth_login_pass")
+                if st.button("Sign In ➔", type="primary", use_container_width=True, key="auth_login_btn"):
+                    ok, msg, udata = auth.login_user(login_user, login_pass)
+                    if ok:
+                        st.session_state["user"] = udata
+                        st.session_state["guest_mode"] = False
+                        st.toast(msg)
+                        st.rerun()
+                    else:
+                        st.error(msg)
+
+            with tab_signup:
+                st.markdown(
+                    "<p style='color: #A1A1AA; font-size: 0.85rem; margin-bottom: 12px;'>Create a free account to sync your saved ideas across devices.</p>",
+                    unsafe_allow_html=True,
+                )
+                signup_display = st.text_input("Your Full Name", placeholder="e.g. Sufyan", key="auth_signup_display")
+                signup_society = st.text_input("Society / Club Name", placeholder="e.g. Youth & Events Society", key="auth_signup_society")
+                signup_user = st.text_input("Choose Username", placeholder="e.g. sufyan", key="auth_signup_user")
+                signup_pass = st.text_input("Password (min 6 characters)", type="password", key="auth_signup_pass")
+                if st.button("Create Account & Sign In ➔", type="primary", use_container_width=True, key="auth_signup_btn"):
+                    ok, msg, udata = auth.signup_user(signup_user, signup_pass, signup_display, signup_society)
+                    if ok:
+                        st.session_state["user"] = udata
+                        st.session_state["guest_mode"] = False
+                        st.toast(msg)
+                        st.rerun()
+                    else:
+                        st.error(msg)
+
+        st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+        if st.button("Continue as Guest (No Cloud Sync) ➔", type="secondary", use_container_width=True, key="auth_guest_btn"):
+            st.session_state["guest_mode"] = True
+            st.rerun()
+
+    st.stop()
+
+# --------------------------------------------------------------------------- #
 # Sidebar: Branding & Profile
 # --------------------------------------------------------------------------- #
 with st.sidebar:
@@ -47,11 +116,47 @@ with st.sidebar:
         f'<div class="brand-header">{logo_svg}<div><h2 class="brand-title">TrendScout</h2><div class="brand-sub">University Society Reels Studio</div></div></div>',
         unsafe_allow_html=True,
     )
+
+    # User Account Card
+    if user:
+        disp_name = user.get("display_name", "")
+        society_sub = f" · {user['society_name']}" if user.get("society_name") else ""
+        st.markdown(
+            f"""
+            <div style="background: #111111; border: 1px solid #27272A; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px;">
+              <div style="font-weight: 700; color: #FFFFFF; font-size: 0.92rem;">👤 @{user['username']}</div>
+              <div style="color: #A1A1AA; font-size: 0.78rem;">{disp_name}{society_sub}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("🚪 Log Out", key="sidebar_logout_btn", use_container_width=True):
+            st.session_state.pop("user", None)
+            st.session_state["guest_mode"] = False
+            st.rerun()
+    else:
+        st.markdown(
+            """
+            <div style="background: rgba(255, 255, 255, 0.04); border: 1px dashed #3F3F46; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.8rem; color: #A1A1AA;">
+              👀 <b>Browsing as Guest</b><br>Sign in to sync your saved ideas across other devices.
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        if st.button("🔑 Sign In / Sign Up", key="sidebar_login_btn", use_container_width=True):
+            st.session_state["guest_mode"] = False
+            st.rerun()
+
     st.divider()
 
     st.subheader("Society Profile")
+    default_society_name = (
+        user.get("society_name")
+        if user and user.get("society_name")
+        else "Youth & Events Society"
+    )
     profile = SocietyProfile(
-        name=st.text_input("Society name", "Youth & Events Society"),
+        name=st.text_input("Society name", default_society_name),
         niche=st.selectbox(
             "Society Category / Focus",
             [
@@ -154,9 +259,14 @@ def show_sources(result: Result) -> None:
 
 
 def save_button(kind: str, data: dict, key: str) -> None:
+    current_user = st.session_state.get("user")
+    uid = current_user["id"] if current_user else None
     if st.button("⭐ Save Idea", key=key):
-        storage.save_item(kind, data)
-        st.toast("Saved! Find it in the ⭐ Saved tab.")
+        storage.save_item(kind, data, user_id=uid)
+        if current_user:
+            st.toast(f"Saved to your account (@{current_user['username']})! Synced across devices.")
+        else:
+            st.toast("Saved! (Sign in to access your ideas across other devices)")
 
 
 # --------------------------------------------------------------------------- #
@@ -435,10 +545,23 @@ with tab_campaign:
 
 # ---------------------------- Saved ---------------------------------------- #
 with tab_saved:
-    st.subheader("Saved Ideas")
-    items = storage.load_saved()
+    current_user = st.session_state.get("user")
+    uid = current_user["id"] if current_user else None
+    if current_user:
+        st.subheader(f"⭐ Saved Ideas for @{current_user['username']}")
+        st.caption(
+            f"Ideas saved under **{current_user.get('display_name', current_user['username'])}**'s account. "
+            "Log in with your credentials from any device to access and export your saved ideas."
+        )
+    else:
+        st.subheader("⭐ Saved Ideas (Guest Mode)")
+        st.caption(
+            "Ideas saved in guest mode are stored locally. Log in or create an account to access them across multiple devices."
+        )
+
+    items = storage.load_saved(user_id=uid)
     if not items:
-        st.caption("Nothing saved yet. Hit ⭐ Save Idea on any trend, reel or campaign.")
+        st.info("Nothing saved yet. Hit ⭐ Save Idea on any trend, reel or campaign.")
     else:
         kinds = st.multiselect(
             "Filter saved items", ["trend", "reel", "campaign"], default=["trend", "reel", "campaign"]
@@ -454,10 +577,10 @@ with tab_saved:
                 or item["data"].get("title")
                 or item["data"].get("campaign_name")
             )
-            with st.expander(f"{icons[item['kind']]} {title}  ·  {item['saved_at']}"):
+            with st.expander(f"{icons.get(item['kind'], '⭐')} {title}  ·  {item['saved_at']}"):
                 st.markdown(storage.to_markdown(item["kind"], item["data"]))
                 if st.button("🗑️ Delete", key=f"del_{item['id']}"):
-                    storage.delete_item(item["id"])
+                    storage.delete_item(item["id"], user_id=uid)
                     st.rerun()
 
 # ---------------------------- Settings / API Key --------------------------- #

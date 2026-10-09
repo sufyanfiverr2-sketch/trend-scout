@@ -78,6 +78,16 @@ Creators often struggle to understand abstract written video concepts. To solve 
 3. Users click directly to watch the viral format in action before filming.
 
 ### 3.4 Design & UI System (`theme.py` & `app.py`)
+- **Monolith Theme:** True pitch-black (`#000000`) background with `#1C1C1C` borders and frost white accents (`#FFFFFF`).
+- **BaseWeb & Emotion Tag Isolation:** Custom CSS rules targeting `.stMultiSelect [data-tag]`, `.e1kig3hy3`, and `.e1kig3hy4` ensuring high-contrast bold black text on crisp white multiselect pills.
+- **Client Resilience:** Graceful handling of missing `st.secrets` files with automatic `.env` and session overrides.
+
+### 3.5 Multi-User Authentication & Cross-Device Persistence (`auth.py` & `storage.py`)
+- **Security:** Pure standard-library PBKDF2-HMAC-SHA256 key derivation with 100,000 iterations and per-user 16-byte random cryptographic salts (`secrets.token_hex(16)`).
+- **Timing Defense:** Constant-time hash verification via `hmac.compare_digest` to mitigate timing analysis attacks.
+- **Database Engine:** Embedded SQLite (`data/trendscout.db`) with foreign key constraints and indexed queries (`idx_users_username`, `idx_saved_ideas_user`).
+- **Cross-Device Sync:** Saved trends, scripts, and campaign playbooks are bound to the authenticated `user_id`, enabling creators to bookmark ideas on mobile and review them later on desktop.
+- **Guest Fallback:** Allows instant unauthenticated exploration with smooth in-app migration to full accounts.
 - **Monolith Pure Pitch Black Palette:**
   - Background: `#000000` (Canvas) & `#080808` (Sidebar)
   - Cards: `#0A0A0A` with `#1F1F1F` borders

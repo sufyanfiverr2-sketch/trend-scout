@@ -20,7 +20,8 @@ TrendScout Studio is an open-source, AI-driven social media trends intelligence 
 | **👀 Visual References** | Video Learning & Direct Search | Every trend and script includes 1-click links to search and watch the real video format on **Instagram Reels**, **Google Videos**, and **YouTube Shorts**. |
 | **🎬 Reel Ideas** | Ready-to-Film Scripts | Full shot-by-shot acting guides, visual descriptions, text overlays, spoken dialogue punchlines, virality ratings, props, captions, and peak posting times. |
 | **📣 Campaign Planner** | Event Marketing Playbooks | Multi-phase promotional campaigns (Meme Teasers → Hype → Countdown → Event Day → Bloopers/Recap) with budget-friendly on-campus guerrilla stunts and measurable KPIs. |
-| **⭐ Idea Vault** | Persistence & Export | Save ideas locally and export entire campaign packages into clean, shareable Markdown for WhatsApp groups, Notion, or team meetings. |
+| **🔐 Multi-User Auth** | Sign Up & Login System | Secure account creation with PBKDF2 password hashing. Saved trends and reel scripts sync to your account across multiple devices (phone, laptop, desktop). |
+| **⭐ Idea Vault** | Persistence & Export | SQLite-backed per-user vault; export entire campaign packages into clean, shareable Markdown for WhatsApp groups, Notion, or team meetings. |
 | **⚙️ Custom Key Override** | Multi-User Flexibility | Built-in settings tab allows visitors to supply their own Google Gemini API key or use the server's default configuration. |
 
 ---
