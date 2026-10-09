@@ -28,21 +28,19 @@ load_dotenv()
 
 st.set_page_config(page_title="TrendScout Studio", page_icon="🎬", layout="wide")
 
+# Locked Theme: Cyber Reel (Neon Glow)
+THEME_NAME = "Cyber Reel (Neon Glow)"
+theme_cfg = THEMES[THEME_NAME]
+logo_svg = LOGOS[theme_cfg["logo"]]
+
+# Inject Cyber Reel CSS directly
+st.markdown(get_css(THEME_NAME), unsafe_allow_html=True)
+
 # --------------------------------------------------------------------------- #
 # Sidebar: Branding & Profile
 # --------------------------------------------------------------------------- #
 with st.sidebar:
-    # Theme Selector
-    theme_name = st.selectbox(
-        "🎨 App Theme & Visual Style",
-        list(THEMES.keys()),
-        index=0,
-        help="Switch between different UI themes and professional vector logos.",
-    )
-    theme_cfg = THEMES[theme_name]
-    logo_svg = LOGOS[theme_cfg["logo"]]
-
-    # Brand Title with SVG Vector Logo
+    # Brand Title with Cyber Reel Vector Logo
     st.markdown(
         f"""
         <div class="brand-header">
@@ -55,7 +53,6 @@ with st.sidebar:
         """,
         unsafe_allow_html=True,
     )
-    st.caption(f"*{theme_cfg['desc']}*")
 
     st.divider()
 
@@ -114,10 +111,7 @@ with st.sidebar:
         ),
     )
 
-# Inject Dynamic CSS for selected theme
-st.markdown(get_css(theme_name), unsafe_allow_html=True)
-
-# Main Banner with SVG Logo
+# Main Banner with Cyber Reel Logo
 st.markdown(
     f"""
     <div style="display: flex; align-items: center; gap: 16px; margin: 8px 0 24px 0;">
@@ -166,10 +160,10 @@ def save_button(kind: str, data: dict, key: str) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# Tabs
+# Tabs (Clean 4 Core Tabs)
 # --------------------------------------------------------------------------- #
-tab_trends, tab_reels, tab_campaign, tab_saved, tab_theme_preview = st.tabs(
-    ["🔥 Trend Radar", "🎬 Reel Ideas", "📣 Campaign Planner", "⭐ Saved", "🎨 Theme Demos"]
+tab_trends, tab_reels, tab_campaign, tab_saved = st.tabs(
+    ["🔥 Trend Radar", "🎬 Reel Ideas", "📣 Campaign Planner", "⭐ Saved"]
 )
 
 # ---------------------------- Trend Radar ---------------------------------- #
@@ -438,37 +432,3 @@ with tab_saved:
                 if st.button("🗑️ Delete", key=f"del_{item['id']}"):
                     storage.delete_item(item["id"])
                     st.rerun()
-
-# ---------------------------- Theme Demos ---------------------------------- #
-with tab_theme_preview:
-    st.subheader("🎨 Theme & Logo Design Demos")
-    st.caption("Compare the 4 modern visual identities designed for TrendScout. Switch active theme anytime in the sidebar!")
-
-    cols = st.columns(2)
-    for idx, (t_name, t_data) in enumerate(THEMES.items()):
-        col = cols[idx % 2]
-        with col:
-            with st.container(border=True):
-                svg_code = LOGOS[t_data["logo"]]
-                is_active = "✅ ACTIVE" if t_name == theme_name else ""
-                st.markdown(
-                    f"""
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                      <div style="display: flex; align-items: center; gap: 12px;">
-                        {svg_code}
-                        <h4 style="margin: 0; color: {t_data['primary']};">{t_name}</h4>
-                      </div>
-                      <span style="font-weight: 700; color: #10B981; font-size: 0.8rem;">{is_active}</span>
-                    </div>
-                    <p style="font-size: 0.88rem; color: #94A3B8; margin-bottom: 12px;">{t_data['desc']}</p>
-                    <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                      <div style="width: 22px; height: 22px; border-radius: 6px; background: {t_data['primary']};" title="Primary"></div>
-                      <div style="width: 22px; height: 22px; border-radius: 6px; background: {t_data['secondary']};" title="Secondary"></div>
-                      <div style="width: 22px; height: 22px; border-radius: 6px; background: {t_data['accent']};" title="Accent"></div>
-                    </div>
-                    <div style="background: {t_data['hook_bg']}; border-left: 4px solid {t_data['hook_border']}; padding: 8px 12px; border-radius: 6px; font-size: 0.86rem; font-weight: 600; color: #F1F5F9;">
-                      Preview Hook: “POV: Bro thought the society budget got approved...”
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
