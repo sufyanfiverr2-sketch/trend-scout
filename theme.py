@@ -49,8 +49,27 @@ def get_css() -> str:
         background-color: #000000 !important;
         color: #F4F4F5 !important;
       }
+      /* Header & Streamlit Developer Toolbar Removal */
       header[data-testid="stHeader"] {
-        background-color: #000000 !important;
+        background-color: transparent !important;
+      }
+      #MainMenu,
+      footer,
+      [data-testid="stToolbar"],
+      [data-testid="stToolbarActions"],
+      [data-testid="stStatusWidget"],
+      [data-testid="stDeployButton"],
+      .stDeployButton,
+      header[data-testid="stHeader"] a,
+      header[data-testid="stHeader"] button[title*="Fork"],
+      header[data-testid="stHeader"] button[aria-label*="Fork"],
+      header[data-testid="stHeader"] [data-testid="stToolbarActions"],
+      .viewerBadge_container__r5tak,
+      .styles_viewerBadge__CvC9N,
+      [data-testid="manage-app-button"],
+      #manage-app-button {
+        display: none !important;
+        visibility: hidden !important;
       }
       section[data-testid="stSidebar"] {
         background-color: #080808 !important;
