@@ -108,6 +108,9 @@ st.markdown(
 
 STATUS_ICON = {"Rising": "📈", "Peak": "🔥", "Fading": "📉"}
 
+# Free Tier Mode by default (avoids paid Google Search quota errors)
+enable_grounding = st.session_state.get("enable_grounding", False)
+
 
 def get_client():
     # User custom key entered in Settings tab takes highest priority
@@ -480,6 +483,18 @@ with tab_settings:
     if c2.button("✖ Clear Key"):
         st.session_state.pop("custom_api_key", None)
         st.info("Custom key cleared! App will use default server key.")
+        st.rerun()
+
+    st.markdown("---")
+    st.subheader("🌐 Search Grounding (Optional)")
+    st.caption("Free Tier Mode is active by default using live RSS signals. If you have a paid Google Cloud project with Gemini Search Grounding enabled, you can toggle it here.")
+    grounding_checked = st.checkbox(
+        "Enable Gemini Paid Google Search Tool",
+        value=st.session_state.get("enable_grounding", False),
+        help="Turn on only if your API key has paid Search Grounding enabled. Keep off on free tier to prevent 429 quota errors.",
+    )
+    if grounding_checked != st.session_state.get("enable_grounding", False):
+        st.session_state["enable_grounding"] = grounding_checked
         st.rerun()
 
     st.markdown("---")
