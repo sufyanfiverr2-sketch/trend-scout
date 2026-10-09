@@ -59,13 +59,16 @@ def get_css() -> str:
       [data-testid="stToolbarActions"],
       [data-testid="stStatusWidget"],
       [data-testid="stDeployButton"],
+      [data-testid="stDecoration"],
       .stDeployButton,
       header[data-testid="stHeader"] a,
       header[data-testid="stHeader"] button[title*="Fork"],
       header[data-testid="stHeader"] button[aria-label*="Fork"],
+      header[data-testid="stHeader"] button[title*="GitHub"],
       header[data-testid="stHeader"] [data-testid="stToolbarActions"],
       .viewerBadge_container__r5tak,
       .styles_viewerBadge__CvC9N,
+      div[class*="viewerBadge"],
       [data-testid="manage-app-button"],
       #manage-app-button {
         display: none !important;
