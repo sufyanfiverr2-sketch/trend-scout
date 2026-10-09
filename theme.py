@@ -164,18 +164,21 @@ def get_css() -> str:
         border-color: #404040 !important;
       }
 
-      /* Multiselect Tag Pill Styling (Black text on white pill) */
-      div[data-baseweb="tag"], span[data-baseweb="tag"] {
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
+      /* Multiselect Tag Pill Styling (Dark Obsidian Pill with Crisp White Text) */
+      span[data-baseweb="tag"], div[data-baseweb="tag"] {
+        background-color: #1A1A1A !important;
+        background: #1A1A1A !important;
+        border: 1px solid #333333 !important;
         border-radius: 6px !important;
+        color: #FFFFFF !important;
       }
-      div[data-baseweb="tag"] *, span[data-baseweb="tag"] * {
-        color: #000000 !important;
+      span[data-baseweb="tag"] span, div[data-baseweb="tag"] span,
+      span[data-baseweb="tag"] div, div[data-baseweb="tag"] div {
+        color: #FFFFFF !important;
         font-weight: 600 !important;
       }
-      div[data-baseweb="tag"] svg, span[data-baseweb="tag"] svg {
-        fill: #000000 !important;
+      span[data-baseweb="tag"] svg, div[data-baseweb="tag"] svg {
+        fill: #A1A1AA !important;
       }
     </style>
     """
