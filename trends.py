@@ -22,7 +22,8 @@ from pydantic import BaseModel, Field
 
 import fetchers
 
-MODEL = "gemini-3.8-flash"
+MODEL = "gemini-3.5-flash"
+FALLBACK_MODELS = ["gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.8-flash"]
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -271,52 +272,34 @@ def _run(
     }
     tools = [{"type": "google_search"}] if enable_grounding else None
 
-    try:
-        kwargs: dict[str, Any] = {
-            "model": MODEL,
-            "system_instruction": SYSTEM_INSTRUCTION,
-            "input": prompt,
-            "response_format": response_format,
-        }
-        if tools:
-            kwargs["tools"] = tools
-
-        interaction = client.interactions.create(**kwargs)
-        data = schema.model_validate_json(_clean_json(interaction.output_text))
-        attach_video_links(data)
-        sources, queries = _extract_grounding(interaction) if tools else ([], [])
-        if extra_sources:
-            sources = (extra_sources or []) + sources
-        return Result(data, sources, queries, signals_used=signals_count)
-    except Exception as first_error:
-        if "429" in str(first_error) or "RESOURCE_EXHAUSTED" in str(first_error):
-            raise _friendly_error(first_error) from first_error
+    last_err: Optional[Exception] = None
+    for model_name in FALLBACK_MODELS:
         try:
-            kwargs2: dict[str, Any] = {
-                "model": MODEL,
+            kwargs: dict[str, Any] = {
+                "model": model_name,
                 "system_instruction": SYSTEM_INSTRUCTION,
-                "input": prompt + "\n\nAnswer in detailed plain text.",
+                "input": prompt,
+                "response_format": response_format,
             }
             if tools:
-                kwargs2["tools"] = tools
-            research = client.interactions.create(**kwargs2)
-            sources, queries = _extract_grounding(research) if tools else ([], [])
-            structured = client.interactions.create(
-                model=MODEL,
-                system_instruction=SYSTEM_INSTRUCTION,
-                input=(
-                    "Convert the following research into the required JSON structure. "
-                    "Keep all specifics.\n\n" + (research.output_text or "")
-                ),
-                response_format=response_format,
-            )
-            data = schema.model_validate_json(_clean_json(structured.output_text))
+                kwargs["tools"] = tools
+
+            interaction = client.interactions.create(**kwargs)
+            data = schema.model_validate_json(_clean_json(interaction.output_text))
             attach_video_links(data)
+            sources, queries = _extract_grounding(interaction) if tools else ([], [])
             if extra_sources:
                 sources = (extra_sources or []) + sources
             return Result(data, sources, queries, signals_used=signals_count)
-        except Exception as second_error:
-            raise _friendly_error(second_error) from second_error
+        except Exception as err:
+            if "429" in str(err) or "RESOURCE_EXHAUSTED" in str(err):
+                raise _friendly_error(err) from err
+            last_err = err
+            continue
+
+    if last_err:
+        raise _friendly_error(last_err) from last_err
+    raise RuntimeError("Failed to generate content with any model.")
 
 
 # --------------------------------------------------------------------------- #

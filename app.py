@@ -116,13 +116,19 @@ def get_client():
         return make_client(custom_key)
 
     # Otherwise read from environment (.env) or Streamlit Cloud Secrets (st.secrets)
-    api_key = os.getenv("GEMINI_API_KEY", "")
-    if not api_key and hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
-        api_key = st.secrets["GEMINI_API_KEY"]
+    api_key = os.getenv("GEMINI_API_KEY", "").strip()
     if not api_key:
-        st.error(
-            "Gemini API key not found! Please open the **⚙️ Settings / API Key** tab to enter your key, "
-            "or set GEMINI_API_KEY in Streamlit Cloud Secrets / .env file."
+        try:
+            if hasattr(st, "secrets") and "GEMINI_API_KEY" in st.secrets:
+                api_key = str(st.secrets["GEMINI_API_KEY"]).strip()
+        except Exception:
+            pass
+
+    if not api_key:
+        st.warning(
+            "🔑 **Gemini API Key Required**\n\n"
+            "Please go to the **⚙️ Settings / API Key** tab to enter your key, "
+            "or set `GEMINI_API_KEY` in your `.env` file or Streamlit Cloud Secrets."
         )
         st.stop()
     return make_client(api_key)

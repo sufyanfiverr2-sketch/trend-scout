@@ -18,7 +18,7 @@ from typing import List
 import httpx
 
 UA = {"User-Agent": "TrendScout/1.0 (university society marketing tool)"}
-TIMEOUT = 10.0
+TIMEOUT = 3.5
 
 
 @dataclass

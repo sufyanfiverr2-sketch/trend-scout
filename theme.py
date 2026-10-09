@@ -164,6 +164,34 @@ def get_css() -> str:
         border-color: #404040 !important;
       }
 
+      /* Tab Styling (Monolith Crisp White Active Indicator - No Blue) */
+      button[data-baseweb="tab"] {
+        color: #A1A1AA !important;
+      }
+      button[data-baseweb="tab"][aria-selected="true"] {
+        color: #FFFFFF !important;
+        border-bottom-color: #FFFFFF !important;
+      }
+      div[data-baseweb="tab-highlight"] {
+        background-color: #FFFFFF !important;
+      }
+      div[data-baseweb="tab-border"] {
+        background-color: #262626 !important;
+      }
+
+      /* Sliders (Monolith White Accent - No Blue) */
+      div[data-baseweb="slider"] div[role="slider"] {
+        background-color: #FFFFFF !important;
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.4) !important;
+      }
+      div[data-baseweb="slider"] div[data-testid="stTickBar"] + div,
+      div[data-baseweb="slider"] > div > div:nth-child(1) {
+        background: #FFFFFF !important;
+      }
+      div[data-testid="stSlider"] div[data-testid="stMarkdownContainer"] p {
+        color: #FFFFFF !important;
+      }
+
       /* Multiselect Tag Pill Styling (White Pill with High-Contrast Pitch Black Text) */
       .stMultiSelect [data-tag],
       [data-testid="stMultiSelect"] [data-tag],
